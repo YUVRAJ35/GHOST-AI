@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST AI Chatbot</title>
+    <style>
+        /* Simple CSS for a dark, ghostly theme */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e; /* Deep purple/blue */
+            color: #e0e0e0; /* Light gray text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .chat-container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #2b2b45; /* Darker chat window */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(180, 100, 255, 0.5); /* Glowing effect */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+        #chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #4a4a6e;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 70%;
+            line-height: 1.4;
+        }
+        .user-message {
+            background-color: #4CAF50; /* User green */
+            margin-left: auto;
+            color: white;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #8a2be2; /* AI purple (GHOST color) */
+            margin-right: auto;
+            color: white;
+            text-align: left;
+        }
+        #input-form {
+            display: flex;
+            padding: 10px;
+            background-color: #1a1a2e;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid #8a2be2;
+            border-radius: 20px;
+            background-color: #3b3b55;
+            color: white;
+            outline: none;
+            margin-right: 10px;
+        }
+        #send-button {
+            padding: 10px 20px;
+            background-color: #4a4a6e;
+            color: #8a2be2;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #send-button:hover {
+            background-color: #6a6a8e;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat-box">
+            <div class="message ai-message">
+                👻 I am GHOST AI, a digital specter. Ask me anything.
+            </div>
+        </div>
+        <form id="input-form">
+            <input type="text" id="user-input" placeholder="Whisper your question..." autocomplete="off">
+            <button type="submit" id="send-button">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('input-form');
+        const input = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page reload
+            const userMessage = input.value.trim();
+            
+            if (userMessage) {
+                // 1. Display user message
+                appendMessage(userMessage, 'user-message');
+                
+                // 2. Clear input field
+                input.value = '';
+
+                // 3. Send message to Flask backend
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // 4. Display AI response
+                    appendMessage(data.response, 'ai-message');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    appendMessage("The connection to the spectral realm was lost...", 'ai-message');
+                });
+            }
+        });
+
+        function appendMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', className);
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            
+            // Scroll to the bottom to see the newest message
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
