@@ -1,0 +1,73 @@
+<body>
+    <div class="chat-container">
+        <div id="chat-box">
+            <div class="ai-message-container">
+                <div class="ai-icon"></div>
+                <div class="message ai-message">
+                    👻 I am GHOST AI, a digital specter. Ask me anything.
+                </div>
+            </div>
+        </div>
+        </div>
+    
+    <script>
+        // ... existing JavaScript variable definitions ...
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page reload
+            const userMessage = input.value.trim();
+            
+            if (userMessage) {
+                // 1. Display user message
+                appendMessage(userMessage, 'user-message');
+                
+                // ... existing fetch call ...
+
+                .then(data => {
+                    // 4. Display AI response
+                    // NOTE: We call a new function for AI message to handle the icon
+                    appendAIMessage(data.response); 
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    appendAIMessage("The connection to the spectral realm was lost...");
+                });
+            }
+        });
+
+        // Function for user messages (no icon needed)
+        function appendMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', className);
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // NEW Function for AI messages (with icon structure)
+        function appendAIMessage(text) {
+            // Container div
+            const containerDiv = document.createElement('div');
+            containerDiv.classList.add('ai-message-container');
+
+            // Icon div
+            const iconDiv = document.createElement('div');
+            iconDiv.classList.add('ai-icon');
+            
+            // Message bubble div
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'ai-message');
+            messageDiv.textContent = text;
+
+            // Assemble and append
+            containerDiv.appendChild(iconDiv);
+            containerDiv.appendChild(messageDiv);
+            chatBox.appendChild(containerDiv);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>
